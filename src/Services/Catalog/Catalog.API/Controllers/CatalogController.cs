@@ -33,7 +33,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<Product>>> GetProductsByName(string name) => Ok(await productRepository.GetProductByName(name));
 
-        [HttpGet("{id:length(24)", Name = "GetProduct")]
+        [HttpGet("{id:length(24)}", Name = "GetProduct")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Product>> GetProductById(string id)
@@ -59,7 +59,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Product>> UpdateProduct([FromBody] Product product) => Ok(await productRepository.UpdateProduct(product));
 
-        [HttpDelete("{id:length(24)", Name = "DeleteProduct")]
+        [HttpDelete("{id:length(24)}", Name = "DeleteProduct")]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Product>> DeleteProduct(string id) => Ok(await productRepository.DeleteProduct(id));
     }
