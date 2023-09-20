@@ -1,3 +1,4 @@
+using Discount.API.Extensions;
 using Discount.API.Repositories;
 using Discount.API.Repositories.Interface;
 
@@ -12,6 +13,9 @@ builder.Services.AddSwaggerGen();
 
 // Inject Repository
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+
+// Migrated PosgreSQL seeded data
+builder.Services.MigrateDatabase<Program>();
 
 var app = builder.Build();
 
