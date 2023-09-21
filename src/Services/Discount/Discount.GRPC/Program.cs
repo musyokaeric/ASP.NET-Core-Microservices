@@ -1,3 +1,6 @@
+using Discount.API.Repositories;
+using Discount.GRPC.Extensions;
+using Discount.GRPC.Repositories.Interface;
 using Discount.GRPC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddGrpc();
+
+// Inject Repository
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+
+// Migrated PosgreSQL seeded data
+builder.Services.MigrateDatabase<Program>();
 
 var app = builder.Build();
 
