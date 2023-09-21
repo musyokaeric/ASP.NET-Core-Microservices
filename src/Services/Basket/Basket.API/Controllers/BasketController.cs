@@ -1,5 +1,6 @@
 using Basket.API.Entities;
 using Basket.API.Repositories.Interface;
+using Discount.GRPC.GrpcServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System.Net;
@@ -12,10 +13,12 @@ namespace Basket.API.Controllers
     public class BasketController : ControllerBase
     {
         private readonly IBasketRepository basketRepository;
+        private readonly DisccountGrpcService disccountGrpcService;
 
-        public BasketController(IBasketRepository basketRepository)
+        public BasketController(IBasketRepository basketRepository, DisccountGrpcService disccountGrpcService)
         {
             this.basketRepository = basketRepository;
+            this.disccountGrpcService = disccountGrpcService;
         }
 
         [HttpGet("{username}", Name = "GetBasket")]
@@ -36,7 +39,17 @@ namespace Basket.API.Controllers
         /// because PUT is more suitable for RDMBS database row column updates.
         [HttpPost]
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ShoppingCart>> UpdateBasket([FromBody] ShoppingCart basket) => Ok(await basketRepository.UpdateBasket(basket));
+        public async Task<ActionResult<ShoppingCart>> UpdateBasket([FromBody] ShoppingCart basket)
+        {
+            // Communicate with Discount.gRPC and calculate the latest product prices into shopping cart
+            foreach (var item in basket.Items)
+            {
+                var coupon = await disccountGrpcService.GetDiscount(item.ProductName);
+                item.Price -= coupon.Amount;
+            }
+
+            return Ok(await basketRepository.UpdateBasket(basket));
+        }
 
         [HttpDelete("{username}", Name = "DeleteBasket")]
         [ProducesResponseType((int)HttpStatusCode.OK)]

@@ -1,7 +1,7 @@
 using Discount.API.Repositories;
 using Discount.GRPC.Extensions;
 using Discount.GRPC.Repositories.Interface;
-// using Discount.GRPC.Services;
+using Discount.GRPC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,13 +14,16 @@ builder.Services.AddGrpc();
 // Inject Repository
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
+// Inject Automapper
+builder.Services.AddAutoMapper(typeof(Program));
+
 // Migrated PosgreSQL seeded data
 builder.Services.MigrateDatabase<Program>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-// app.MapGrpcService<GreeterService>();
+app.MapGrpcService<DiscountService>();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
 app.Run();
