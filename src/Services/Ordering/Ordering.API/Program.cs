@@ -36,6 +36,12 @@ builder.Services.AddMassTransit(config =>
     });
 });
 
+// Inject AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
+
+// Inject BasketCheckoutConsumer
+builder.Services.AddScoped<BasketCheckoutConsumer>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
