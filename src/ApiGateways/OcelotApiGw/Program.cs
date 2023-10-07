@@ -10,6 +10,9 @@ builder.Logging.AddDebug();
 // Inject Ocelot
 builder.Services.AddOcelot();
 
+// Ocelot Routing Configs
+builder.Configuration.AddJsonFile($"ocelot.{builder.Environment.EnvironmentName}.json", true, true);
+
 var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
