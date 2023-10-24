@@ -1,7 +1,7 @@
-using AspnetRunBasics.Data;
-using AspnetRunBasics.Repositories;
 using AspnetRunBasics;
 using Microsoft.EntityFrameworkCore;
+using AspnetRunBasics.Services.Interfaces;
+using AspnetRunBasics.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,18 +12,23 @@ var builder = WebApplication.CreateBuilder(args);
 //    c.UseInMemoryDatabase("AspnetRunConnection"));
 
 // add database dependecy
-builder.Services.AddDbContext<AspnetRunContext>(c =>
-    c.UseSqlServer(builder.Configuration.GetConnectionString("AspnetRunConnection")));
+//builder.Services.AddDbContext<AspnetRunContext>(c =>
+//    c.UseSqlServer(builder.Configuration.GetConnectionString("AspnetRunConnection")));
+
+// Register Http Client Factory
+builder.Services.AddHttpClient<ICatalogService, CatalogService>(c => c.BaseAddress = new Uri(builder.Configuration["ApiSettings:GatewayAddress"]));
+builder.Services.AddHttpClient<IBasketService, BasketService>(c => c.BaseAddress = new Uri(builder.Configuration["ApiSettings:GatewayAddress"]));
+builder.Services.AddHttpClient<IOrderService, OrderService>(c => c.BaseAddress = new Uri(builder.Configuration["ApiSettings:GatewayAddress"]));
 
 #endregion
 
 #region project services
 
 // add repository dependecy
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<ICartRepository, CartRepository>();
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IContactRepository, ContactRepository>();
+//builder.Services.AddScoped<IProductRepository, ProductRepository>();
+//builder.Services.AddScoped<ICartRepository, CartRepository>();
+//builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+//builder.Services.AddScoped<IContactRepository, ContactRepository>();
 
 #endregion
 
